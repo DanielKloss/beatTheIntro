@@ -1,5 +1,6 @@
 <script>
     import { track } from "$lib/stores/track.js";
+    import { score } from "$lib/stores/score.js";
     $: $track, getAnswers();
 
     let answers = [];
@@ -24,8 +25,12 @@
     function submitAnswer(answer){
         if (answer == correctAnswer){
             console.log("Correct!")
+            $score += 1;
+            answers = [];
         } else {
             console.log("Incorrect!")
+            $score -= 1;
+            //answers = answers.splice(answers.indexOf(answer),1);
         }
     }
 </script>
