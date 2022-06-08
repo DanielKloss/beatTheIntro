@@ -42,3 +42,15 @@ export async function getAllArtistsTracks(url, token) {
 
 	return tracks;
 }
+
+
+export async function getScore(url, token) {
+	const response = await fetch(url, {
+		headers: { Authorization: 'Bearer ' + token }
+	});
+	const formattedResponse = await response.json();
+
+	console.log(formattedResponse);
+
+	return Math.round((formattedResponse['progress_ms'] / formattedResponse['item']['duration_ms']) * 100);
+}

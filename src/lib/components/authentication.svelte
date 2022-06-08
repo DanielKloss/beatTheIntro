@@ -11,7 +11,7 @@
     var state = generateRandomString(16);
     var clientId = import.meta.env.VITE_CLIENT_ID;
     var redirectUri = import.meta.env.VITE_REDIRECT_URI;
-    var scopes = ['user-read-private', 'user-read-recently-played', 'playlist-read-collaborative', 'user-top-read', 'user-follow-read', 'user-library-read', 'playlist-read-private', 'user-read-currently-playing', 'user-read-playback-position', 'user-modify-playback-state', 'streaming'];
+    var scopes = ['user-read-private', 'user-read-recently-played', 'playlist-read-collaborative', 'user-top-read', 'user-follow-read', 'user-library-read', 'playlist-read-private', 'user-read-currently-playing', 'user-read-playback-position', 'user-modify-playback-state', 'streaming', 'user-read-playback-state'];
     var url = "https://accounts.spotify.com/authorize?";
 
     $: loginLink = url + new URLSearchParams({
