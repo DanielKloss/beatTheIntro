@@ -1,11 +1,16 @@
-export async function getAllFollowedArtists(url, token) {
-	let artists = [];
+async function api(url, token) {
 	const response = await fetch(url, {
 		headers: { Authorization: 'Bearer ' + token }
 	});
-	const formattedResponse = await response.json();
+	return await response.json();
+}
 
-	for (const artist of formattedResponse['artists']['items']) {
+export async function getAllFollowedArtists(url, token) {
+	let artists = [];
+	
+	let response = api(url, token);
+
+	for (const artist of response['artists']['items']) {
 		artists.push({
 			href: artist['href'],
 			id: artist['id'],
@@ -14,7 +19,7 @@ export async function getAllFollowedArtists(url, token) {
 		});
 	}
 
-	let nextPage = formattedResponse['artists']['next'];
+	let nextPage = response['artists']['next'];
 
 	if (nextPage != null) {
 		const response = await getAllFollowedArtists(nextPage, token);
@@ -27,12 +32,9 @@ export async function getAllFollowedArtists(url, token) {
 export async function getAllArtistsTracks(url, token) {
 	let tracks = [];
 
-	const response = await fetch(url, {
-		headers: { Authorization: 'Bearer ' + token }
-	});
-	const formattedResponse = await response.json();
+	let response = api(url, token);
 
-	for (const track of formattedResponse['tracks']) {
+	for (const track of response['tracks']) {
 		tracks.push({
 			album: track['album']['name'],
 			name: track['name'],
@@ -43,14 +45,8 @@ export async function getAllArtistsTracks(url, token) {
 	return tracks;
 }
 
-
 export async function getScore(url, token) {
-	const response = await fetch(url, {
-		headers: { Authorization: 'Bearer ' + token }
-	});
-	const formattedResponse = await response.json();
-
-	console.log(formattedResponse);
+	let response = api(url, token);
 
 	return Math.round((formattedResponse['progress_ms'] / formattedResponse['item']['duration_ms']) * 100);
 }
