@@ -61,6 +61,4 @@
     token.set(accessToken);
 </script>
 
-<main>
-    <slot></slot>
-</main>
+<slot></slot>

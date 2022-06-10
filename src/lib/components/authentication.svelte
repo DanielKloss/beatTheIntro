@@ -23,6 +23,9 @@
     });
 </script>
 
-<a href={loginLink}>
-    <button class="login-btn">Connect to Spotify</button>
-</a>
+<div class="flex flex-col items-center mt-32 ml-1/2">
+    <a href={loginLink} class="w-2/12 mb-2">
+        <img src="spotifyLogoGreen.png" alt="spotify login"/>
+    </a>
+    <p class="font-semibold">LOGIN TO SPOTIFY</p>
+</div>
