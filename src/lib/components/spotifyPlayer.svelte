@@ -66,5 +66,4 @@
     }
 </script>
 
-Press to play
-<button on:click="{() => playSong()}">Play Song</button>
+<button class="btn btn-outline" on:click="{() => playSong()}">Play Next Song</button>

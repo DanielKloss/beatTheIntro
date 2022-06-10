@@ -1,14 +1,25 @@
 <script>
     import { track } from "$lib/stores/track.js";
     import { score } from "$lib/stores/score.js";
-    import { getScore } from "$lib/spotifyApi/requests";
-    import { token } from "$lib/stores/authenication.js";
     $: $track, getAnswers();
 
     let answers = [];
     let correctAnswer;
+    let points = 50;
+    let timeout;
 
-    function getAnswers(){
+    function decrementTimer(delay){
+        points--;
+        
+        if(points > 0){
+            timeout = setTimeout(() => decrementTimer(delay), delay);
+        } else {
+            answers = [];
+            $score -= 100;
+        }
+    }
+
+    async function getAnswers(){        
         if ($track != null){
             correctAnswer = $track.artist.name;
             answers.push(correctAnswer);
@@ -22,6 +33,10 @@
             }
             
             answers = shuffleAnswers(answers);
+
+            let delay = $track.duration / 50;
+
+            timeout = setTimeout(() => decrementTimer(delay), delay)
         }
     }
 
@@ -38,14 +53,14 @@
     }
 
     async function submitAnswer(answer){
-        let scoretoAdd = await getScore("https://api.spotify.com/v1/me/player", $token);
         if (answer == correctAnswer){
             console.log("Correct!")
-            $score += (100 - scoretoAdd);
+            $score += points;
             answers = [];
+            clearTimeout(timeout);
         } else {
             console.log("Incorrect!")
-            $score -= (scoretoAdd * 10);
+            points -= 10;
             answers.splice(answers.indexOf(answer), 1);
 
             if(answers.length == 1){
@@ -57,6 +72,11 @@
     }
 </script>
 
+<div class="flex justify-center">
+    <span class="countdown font-mono text-6xl">
+    <span style="--value:{points};"></span>
+    </span>
+</div>
 {#each answers as answer}
-    <button on:click="{() => submitAnswer(answer)}">{answer}</button>
+    <button class="btn" on:click="{() => submitAnswer(answer)}">{answer}</button>
 {/each}

@@ -8,7 +8,7 @@ async function api(url, token) {
 export async function getAllFollowedArtists(url, token) {
 	let artists = [];
 	
-	let response = api(url, token);
+	let response = await api(url, token);
 
 	for (const artist of response['artists']['items']) {
 		artists.push({
@@ -32,21 +32,25 @@ export async function getAllFollowedArtists(url, token) {
 export async function getAllArtistsTracks(url, token) {
 	let tracks = [];
 
-	let response = api(url, token);
+	let response = await api(url, token);
 
 	for (const track of response['tracks']) {
 		tracks.push({
 			album: track['album']['name'],
 			name: track['name'],
-			uri: track['uri']
+			uri: track['uri'],
+			duration: track['duration_ms']
 		});
 	}
 
 	return tracks;
 }
 
-export async function getScore(url, token) {
-	let response = api(url, token);
+export async function getTrackDuration(url, token) {
+	let response = await api(url, token);
+	console.log(response);
 
-	return Math.round((formattedResponse['progress_ms'] / formattedResponse['item']['duration_ms']) * 100);
+	//return Math.round((response['progress_ms'] / response['item']['duration_ms']) * 100);
+
+	return response['item']['duration_ms'];
 }
