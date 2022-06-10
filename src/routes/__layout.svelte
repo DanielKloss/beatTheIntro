@@ -53,6 +53,7 @@
 </script>
 
 <script>
+    import "../app.css";
     import { token } from "$lib/stores/authenication.js";
     
     export let accessToken;
