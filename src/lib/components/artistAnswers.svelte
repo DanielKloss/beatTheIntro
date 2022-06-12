@@ -1,12 +1,19 @@
 <script>
-    import { track } from "$lib/stores/track.js";
-    import { score } from "$lib/stores/score.js";
+    import { track, score, questionNumber } from "$lib/stores/gameVars.js";
     $: $track, getAnswers();
 
     let answers = [];
     let correctAnswer;
-    let points = 50;
+    let points;
     let timeout;
+    let endOfQuestion = "rtest";
+
+    function reset(){
+        clearTimeout(timeout);
+        answers = [];
+        $questionNumber++; 
+        console.log($questionNumber);
+    }
 
     function decrementTimer(delay){
         points--;
@@ -14,12 +21,16 @@
         if(points > 0){
             timeout = setTimeout(() => decrementTimer(delay), delay);
         } else {
-            answers = [];
-            $score -= 100;
+            $score -= 50;
+            endOfQuestion = "Oh No! You lost 50 points!";
+            reset()
         }
     }
 
-    async function getAnswers(){        
+    async function getAnswers(){   
+        points = 50;
+        endOfQuestion = "";
+        
         if ($track != null){
             correctAnswer = $track.artist.name;
             answers.push(correctAnswer);
@@ -54,17 +65,17 @@
 
     async function submitAnswer(answer){
         if (answer == correctAnswer){
-            console.log("Correct!")
             $score += points;
-            answers = [];
-            clearTimeout(timeout);
+            endOfQuestion = "Well done! You scored " + points + " points";
+            reset();
         } else {
-            console.log("Incorrect!")
             points -= 10;
             answers.splice(answers.indexOf(answer), 1);
 
             if(answers.length == 1){
-                answers = [];
+                $score -= 50;
+                endOfQuestion = "Oh No! You lost 50 points!";
+                reset();
             } else {
                 answers = answers;
             }
@@ -72,11 +83,18 @@
     }
 </script>
 
-<div class="flex justify-center">
-    <span class="countdown font-mono text-6xl">
-    <span style="--value:{points};"></span>
-    </span>
-</div>
-{#each answers as answer}
-    <button class="btn" on:click="{() => submitAnswer(answer)}">{answer}</button>
-{/each}
+{#if $track != null}
+    {#if answers.length == 0}
+        <p class="font-bold">{$track.name} - {$track.artist.name}</p>
+        {endOfQuestion}
+    {:else}
+        <div class="flex justify-center">
+            <span class="countdown font-mono text-6xl">
+            <span style="--value:{points};"></span>
+            </span>
+        </div>
+        {#each answers as answer}
+            <button class="btn" on:click="{() => submitAnswer(answer)}">{answer}</button>
+        {/each}
+    {/if}
+{/if}

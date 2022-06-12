@@ -1,6 +1,6 @@
 <script>
     import { token } from "$lib/stores/authenication.js";
-    import { track } from "$lib/stores/track.js";
+    import { track } from "$lib/stores/gameVars.js";
     import { onMount } from 'svelte';
 
     let player;
