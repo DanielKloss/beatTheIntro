@@ -16,6 +16,13 @@
   onMount(async () => {
     checkTracksLoaded();
   });
+
+// IMPROVMENTS
+// 1 - include all favourite songs, albums, artists and playlists
+// 2 - database leaderboard
+// 3 - guess artists and song mode
+// 4 - 
+
 </script>
 
 {#if $token == null}
@@ -27,6 +34,8 @@
     <div class="container mx-auto px-16 text-center flex flex-col gap-4 mt-8">
       {#if $questionNumber > 10}
         <p>Well done! You scored {$score} points!</p>
+        <p class="font-bold">Thanks for playing</p>
+        <p class="font-bold">What improvements/ additions would you like to see in future Beat the Intro versions?</p>
       {/if}
       <SpotifyPlayer/>
       <div class="flex flex-col">
