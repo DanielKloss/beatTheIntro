@@ -1,9 +1,12 @@
 <script>
     import { token } from "$lib/stores/authenication.js";
-    import { track } from "$lib/stores/gameVars.js";
+    import { track, questionNumber, score } from "$lib/stores/gameVars.js";
     import { onMount } from 'svelte';
 
     let player;
+    let playerReady = false;
+    $: $questionNumber, getButtonText();
+    let action = "START";
 
 	onMount(async () => {
         let script = document.createElement('script')
@@ -23,47 +26,70 @@
             });
 
             player.addListener('ready', ({ device_id }) => {
-                console.log("player ready", device_id)
                 player._options.id = device_id;
+                playerReady = true;
             });
 
             player.connect();
         }
     });
 
+    function getButtonText(){
+        if ($questionNumber == 0){
+            action = "START";
+        }
+        else if ($questionNumber == 11){
+            action = "PLAY AGAIN";
+        } else if ($questionNumber == 10){
+            action = "FINISH";
+        } else {
+            action = "NEXT SONG";
+        }
+    }
+
     function playSong(){
-        let tracks = JSON.parse(localStorage.getItem('tracks'));
-        let randomSong = tracks[Math.floor(Math.random()*(tracks.length))];
-        let songUri = randomSong.uri;
+        $questionNumber++; 
+        if ($questionNumber == 11){
+            player.pause();
+            $questionNumber = 0;
+            $score = 0;
+            $track = null;
+        } else {
+            let tracks = JSON.parse(localStorage.getItem('tracks'));
+            let randomSong = tracks[Math.floor(Math.random()*(tracks.length))];
+            let songUri = randomSong.uri;
 
-        track.set(randomSong);
+            track.set(randomSong);
 
-        const play = ({
-            spotify_uri,
-            playerInstance: {
-                _options: {
-                    getOAuthToken,
-                    id
+            const play = ({
+                spotify_uri,
+                playerInstance: {
+                    _options: {
+                        getOAuthToken,
+                        id
+                    }
                 }
-            }
-        }) => {
-            getOAuthToken(access_token => {
-                fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ uris: [spotify_uri] }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${access_token}`
-                    },
-                });
-            });
-        };
+                }) => {
+                    getOAuthToken(access_token => {
+                        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+                            method: 'PUT',
+                            body: JSON.stringify({ uris: [spotify_uri] }),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${access_token}`
+                            },
+                        });
+                    });
+                };
 
-        play({
-            playerInstance: player,
-            spotify_uri: songUri,
-        });
+            play({
+                playerInstance: player,
+                spotify_uri: songUri,
+            });
+        }
     }
 </script>
 
-<button class="btn btn-outline" on:click="{() => playSong()}">Play Next Song</button>
+{#if playerReady}
+    <button class="btn btn-outline" on:click="{playSong}">{action}</button>
+{/if}

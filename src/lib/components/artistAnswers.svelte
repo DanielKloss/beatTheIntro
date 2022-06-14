@@ -11,8 +11,6 @@
     function reset(){
         clearTimeout(timeout);
         answers = [];
-        $questionNumber++; 
-        console.log($questionNumber);
     }
 
     function decrementTimer(delay){
