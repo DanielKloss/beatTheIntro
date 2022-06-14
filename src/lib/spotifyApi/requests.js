@@ -45,12 +45,3 @@ export async function getAllArtistsTracks(url, token) {
 
 	return tracks;
 }
-
-export async function getTrackDuration(url, token) {
-	let response = await api(url, token);
-	console.log(response);
-
-	//return Math.round((response['progress_ms'] / response['item']['duration_ms']) * 100);
-
-	return response['item']['duration_ms'];
-}

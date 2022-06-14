@@ -20,7 +20,7 @@
                     name: artist.name,
                     href: artist.href,
                     id: artist.id,
-                    duration: artist.uri
+                    uri: artist.uri
                 };
                 tracks.push(track);
             }

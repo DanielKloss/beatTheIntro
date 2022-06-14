@@ -1,12 +1,12 @@
 <script>
-    import { track, score, questionNumber } from "$lib/stores/gameVars.js";
+    import { track, score } from "$lib/stores/gameVars.js";
     $: $track, getAnswers();
 
     let answers = [];
     let correctAnswer;
     let points;
     let timeout;
-    let endOfQuestion = "rtest";
+    let endOfQuestion;
 
     function reset(){
         clearTimeout(timeout);
@@ -43,7 +43,7 @@
             
             answers = shuffleAnswers(answers);
 
-            let delay = $track.duration / 50;
+            let delay = $track.duration / 150;
 
             timeout = setTimeout(() => decrementTimer(delay), delay)
         }

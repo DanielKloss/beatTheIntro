@@ -51,9 +51,10 @@
         $questionNumber++; 
         if ($questionNumber == 11){
             player.pause();
+            $track = null;
+        } else if ($questionNumber == 12){
             $questionNumber = 0;
             $score = 0;
-            $track = null;
         } else {
             let tracks = JSON.parse(localStorage.getItem('tracks'));
             let randomSong = tracks[Math.floor(Math.random()*(tracks.length))];
