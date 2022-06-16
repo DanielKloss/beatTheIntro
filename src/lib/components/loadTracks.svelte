@@ -4,8 +4,10 @@
     import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
+    let loading = false;
 
     async function loadTracks(){
+        loading = true;
         let artists = await getAllFollowedArtists("https://api.spotify.com/v1/me/following?type=artist&limit=50", $token)
 
         localStorage.setItem('artists', JSON.stringify(artists));
@@ -31,6 +33,7 @@
         console.log("Saved tracks in local storage");
 
         dispatch('tracksSaved');
+        loading = false;
     }
 </script>
 
@@ -38,5 +41,11 @@
     <p class="font-bold">Connected to your Spotify account.</p>
     <p>Beat the Intro currently only uses artist's you have 'favourited' with a green heart. If you have not favourited any (or many) artists, go into your spotify and add a few now.</p>
     <p>When you're done. Click the button below to sync your tracks with Beat the Intro.</p>
-    <button class="btn" on:click="{() => loadTracks()}">Sync Tracks</button>
+    {#if loading}
+        <div class="flex justify-center">
+            <progress class="progress w-56"></progress>
+        </div>
+    {:else}
+        <button class="btn" on:click="{() => loadTracks()}">Sync Tracks</button>
+    {/if}
 </div>

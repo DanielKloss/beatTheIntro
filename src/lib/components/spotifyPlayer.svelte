@@ -93,4 +93,8 @@
 
 {#if playerReady}
     <button class="btn btn-outline" on:click="{playSong}">{action}</button>
+{:else}
+    <div class="flex justify-center">
+        <progress class="progress w-56"></progress>
+    </div>
 {/if}

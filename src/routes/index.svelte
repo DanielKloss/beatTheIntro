@@ -32,7 +32,6 @@
     <LoadTracks on:tracksSaved={checkTracksLoaded}/>
   {:else}
     <div class="container mx-auto px-16 text-center flex flex-col gap-4 mt-8">
-      <SpotifyPlayer/>
       {#if $questionNumber > 10}
         <p>Well done! You scored {$score} points!</p>
         <p class="font-bold">Thanks for playing</p>
@@ -43,6 +42,7 @@
           <p>Score: {$score}</p>
         </div>
       {/if}
+      <SpotifyPlayer/>
       <ArtistAnswers/>
     </div>
   {/if}
