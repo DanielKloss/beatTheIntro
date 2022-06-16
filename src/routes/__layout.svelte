@@ -61,4 +61,8 @@
     token.set(accessToken);
 </script>
 
+<div class="container mx-auto px-16 text-center flex flex-col gap-4 py-4 bg-neutral-content">
+    <p class="font-bold text-stone-900">Unnamed Beat the Intro Game</p>
+    <p class="font-bold text-xs text-stone-800">By Daniel Kloss</p>
+</div>
 <slot></slot>
